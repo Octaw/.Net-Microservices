@@ -9,14 +9,22 @@ namespace Mango.Services.ProductAPI
 {
     public class Program
     {
+        public IConfiguration Configuration { get; }
+        public Program(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
 
+            
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer("Server = (localdb)\\localhost; Database = MangoProductAPI; Trusted_Connection = True; MultipleActiveResultSets = true"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             builder.Services.AddSingleton(mapper);
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
